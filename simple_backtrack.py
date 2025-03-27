@@ -6,13 +6,13 @@
 # imports
 import numpy as np
 
-prob = [7, 8, 7, 6, 1, 7]
-target = 9
+#prob = [7, 8, 7, 6, 1, 7]
+#target = 9
 
 # general approach: set first value to true, then check if <= target
 #   if so, mark it and try the next value to see if sum is <= target
 
-problem = [9, 9, 8, 6, 2, 8]
+problem = [1, 4, 5, 6, 4, 3, 4, 9]
 target = 18
 
 def subset_sum(nums, tgt):

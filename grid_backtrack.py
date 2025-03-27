@@ -35,9 +35,38 @@ print(row_target)
 print(puzzle_array)
 
 
+
+
 def solve_puzzle(p_array, p_size, c_tgt, r_tgt):
     iter = 0
     p_mask = [[0 for _ in range(p_size)] for _ in range(p_size)]
+
+    def is_subset_valid(row, col, cell_value, include):
+        def subset_sum_exists(values, target):
+            if target == 0:                     # target is 0, subset exists
+                return True
+            if target < 0 or len(values) == 0:  # target is negative or no values left - no valid subset
+                return False
+            
+            # include the first value
+            if subset_sum_exists(values[1:], target - values[0]):
+                return True
+            # exclude the first value
+            return subset_sum_exists(values[1:], target)    
+        
+        remaining_row_vals = [p_array[row][j] for j in range(p_size) if j != col and p_mask[row][j] == 0]
+        remaining_col_vals = [p_array[i][col] for i in range(p_size) if i != row and p_mask[i][col] == 0]
+
+        # adjust tgts based on include/exclude
+        if include:
+            row_target = r_tgt[row] - cell_value
+            col_target = c_tgt[col] = cell_value
+        else:
+            row_target = r_tgt[row]
+            col_target = c_tgt[col]
+    
+        # now check for valid row and col subsets
+        return subset_sum_exists(remaining_row_vals, row_target) and subset_sum_exists(remaining_col_vals, col_target)
 
     def back_track(cell_index):  
                                          # step through grid cell-wise
@@ -59,7 +88,7 @@ def solve_puzzle(p_array, p_size, c_tgt, r_tgt):
         # Check the cell both ways
         cell_value = p_array[row][col]
 
-        if r_tgt[row] >= cell_value and c_tgt[col] >= cell_value:
+        if is_subset_valid(row, col, cell_value, include=True):
             p_mask[row][col] = 1
             r_tgt[row] -= cell_value
             c_tgt[col] -= cell_value
@@ -74,7 +103,8 @@ def solve_puzzle(p_array, p_size, c_tgt, r_tgt):
             c_tgt[col] += cell_value   
          
         # now try excluding it
-        p_mask[row][col] = -1
+        if is_subset_valid(row, col, cell_value, include=False):
+            p_mask[row][col] = -1
               
         if back_track(cell_index + 1):
             return True
