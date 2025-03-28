@@ -131,3 +131,38 @@ for cell_index in range(puzzle_size * puzzle_size):
         puzzle_mask[row, column] = -1
 
 print(puzzle_mask)
+'''
+Basic pseudocode for rest
+- create a "test" mask, initialize with puzzle mask
+- create temp row and column targets
+- START Backtrack select a spot, starting with cell_index = 0
+- If the spot's mask is -1, 
+    cell_index +=1, backtrack to start
+- If mask = 1, 
+    decrement row and column temporary targets, 
+    exclude number from subset
+    cell_index += 1, backtrack to start
+- Else if main and trial mask = 0
+    Add cell value to existing row and column valid and trial sets
+        if sum > target or at the end of the row or set of numbers
+            set trial mask to 0
+            cell_index += 1, backtrack to start
+        else if sum <= target and not at end of row or set of numbers
+            Find row subsets
+            Find col subsets
+            Check if cell is valid
+            If cell is invalid
+                set main and trial mask to -1
+                cell_index += 1, backtrack to start
+             Else if cell is valid 
+                try both leaving it in and taking it out
+                leave it in
+                append current number to existing sum 
+                set trial mask to 1, leave main mask at 0
+                cell_index += 1, backtrack to start
+                take it out
+                pop current number off of existing set
+                cell_index += 1, backtrack to start
+
+
+'''
