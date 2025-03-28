@@ -5,6 +5,7 @@
 #
 # imports
 import numpy as np
+from itertools import combinations
 
 def load_puzzle_csv():
     # takes a csv file and returns the puzzle_array, puzzle size, 
@@ -85,6 +86,30 @@ def find_subsets(nums, tgt, mask):
         
     return result
 
+def just_find_subsets(nums, tgt):
+    t_nums = nums.tolist()
+    t_tgt = tgt
+    result = []
+
+    def local_backtrack(idx, cur_subset, cur_sum):
+    
+        if cur_sum == t_tgt:
+            result.append(cur_subset[:])                            # use a copy so you don't mung the original 
+            return 
+        if cur_sum > t_tgt or idx == len(t_nums):
+            return 
+    
+    # now try both including and excluding the current number
+        cur_subset.append(t_nums[idx])
+        local_backtrack(idx + 1, cur_subset, cur_sum + t_nums[idx])
+
+        cur_subset.pop()
+        local_backtrack(idx + 1, cur_subset, cur_sum)
+
+    local_backtrack(0, [], 0)
+        
+    return result 
+
 def is_cell_valid(c_value, r_subsets, c_subsets):
     r_valid = False
     c_valid = False
@@ -112,10 +137,10 @@ puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_targets, column_targets
 # general approach: set first value to true, then check if it fits into target 
 #   for both its row and column
 #   if so, mark it and try the next value to see if sum is <= target
+# first, scrub through array and mark valid cells 
 
 print(puzzle_array)
-print(puzzle_mask)
-
+# print(puzzle_mask)
 
 for cell_index in range(puzzle_size * puzzle_size):
     row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
@@ -130,10 +155,47 @@ for cell_index in range(puzzle_size * puzzle_size):
     if valid_cell == False:
         puzzle_mask[row, column] = -1
 
-print(puzzle_mask)
+# print(puzzle_mask)
+# redo mask for backtrack: change -1 to 0, 0 to plus one -- just add 1 to everything
+changer_mask = np.ones([puzzle_size, puzzle_size], dtype=int)
+bt_mask = puzzle_mask + changer_mask
+
+# print(bt_mask)
+
+# now multiply bt_mask * puzzle -- valid numbers remain, invalids replaced by zeros
+bt_puzzle_array = puzzle_array * bt_mask
+
+# print(bt_puzzle_array)
+
+# one more scrub with new array for invalid numbers
+for cell_index in range(puzzle_size * puzzle_size):
+    row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
+                                                                                row_targets, column_targets, 
+                                                                                bt_puzzle_array, bt_mask, puzzle_size)
+
+    row_subsets = just_find_subsets(row_nums, row_tgt)
+    col_subsets = just_find_subsets(col_nums, col_tgt)
+
+    valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
+
+    if valid_cell == False:
+        bt_mask[row, column] = 0
+
+# print(bt_mask)
+bt_puzzle_array = puzzle_array * bt_mask
+
+print(bt_puzzle_array)
+
+# main BT solver
+# recreate puzzle mask and new 'test' mask
+puzzle_mask = bt_mask - changer_mask     # go back to -1 for invalid, 0 for unknown for mandatory
+bt_test_mask = puzzle_mask
+
+print(bt_test_mask)
+
 '''
 Basic pseudocode for rest
-- create a "test" mask, initialize with puzzle mask
+- create a "test" mask, initialize with bt puzzle mask
 - create temp row and column targets
 - START Backtrack select a spot, starting with cell_index = 0
 - If the spot's mask is -1, 
@@ -163,6 +225,4 @@ Basic pseudocode for rest
                 take it out
                 pop current number off of existing set
                 cell_index += 1, backtrack to start
-
-
 '''
