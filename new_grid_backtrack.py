@@ -5,7 +5,7 @@
 #
 # imports
 import numpy as np
-from itertools import combinations
+from ortools.sat.python import cp_model
 
 def load_puzzle_csv():
     # takes a csv file and returns the puzzle_array, puzzle size, 
@@ -127,6 +127,39 @@ def is_cell_valid(c_value, r_subsets, c_subsets):
     
     return cell_valid
 
+def solve_grid(p_array, r_tgts, c_tgts, p_size):
+    # solves the grid via the google ortools cpt model
+    
+    # initialize the problem
+    model = cp_model.CpModel()
+    x = {}                                  # dictionary for variables
+    # set up the puzzle spots as booleans by row and column
+    for i in range(p_size):
+        for j in range(p_size):
+            x[i, j] = model.NewBoolVar(f"x[{i},{j}]")
+    
+    # now set up the row targets as constraints 
+    for i in range(p_size):
+        model.Add(sum(p_array[i][j] * x[i, j] for j in range(p_size)) == r_tgts[i])
+           
+    # now do the same for column targets
+    for j in range(p_size):
+        model.Add(sum(p_array[i][j] * x[i, j] for i in range(p_size)) == c_tgts[j])
+
+    # set up the solver
+    solver = cp_model.CpSolver()
+    status = solver.Solve(model)
+
+    # now get the solution
+    if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
+        solution = {}
+        for i in range(p_size):
+            for j in range(p_size):
+                solution[i,j] = solver.Value(x[i,j])
+        return solution
+    else:
+        return None    
+
 puzzle_array, puzzle_size, column_targets, row_targets = load_puzzle_csv()
 
 column_mask, row_mask, puzzle_mask = create_masks(puzzle_size)
@@ -186,43 +219,24 @@ bt_puzzle_array = puzzle_array * bt_mask
 
 print(bt_puzzle_array)
 
-# main BT solver
-# recreate puzzle mask and new 'test' mask
-puzzle_mask = bt_mask - changer_mask     # go back to -1 for invalid, 0 for unknown for mandatory
-bt_test_mask = puzzle_mask
+# main solver using solve_grid
 
-print(bt_test_mask)
+solution = solve_grid(bt_puzzle_array, row_targets, column_targets, puzzle_size) 
 
-'''
-Basic pseudocode for rest
-- create a "test" mask, initialize with bt puzzle mask
-- create temp row and column targets
-- START Backtrack select a spot, starting with cell_index = 0
-- If the spot's mask is -1, 
-    cell_index +=1, backtrack to start
-- If mask = 1, 
-    decrement row and column temporary targets, 
-    exclude number from subset
-    cell_index += 1, backtrack to start
-- Else if main and trial mask = 0
-    Add cell value to existing row and column valid and trial sets
-        if sum > target or at the end of the row or set of numbers
-            set trial mask to 0
-            cell_index += 1, backtrack to start
-        else if sum <= target and not at end of row or set of numbers
-            Find row subsets
-            Find col subsets
-            Check if cell is valid
-            If cell is invalid
-                set main and trial mask to -1
-                cell_index += 1, backtrack to start
-             Else if cell is valid 
-                try both leaving it in and taking it out
-                leave it in
-                append current number to existing sum 
-                set trial mask to 1, leave main mask at 0
-                cell_index += 1, backtrack to start
-                take it out
-                pop current number off of existing set
-                cell_index += 1, backtrack to start
-'''
+# assuming we get a solution, print it out
+if solution:
+    # create the (0,1) mask
+    # print('Mask')
+    solution_mask = []
+    for i in range(puzzle_size):
+        rw_mask = [solution[(i, j)] for j in range(puzzle_size)]
+        solution_mask.append(rw_mask)
+    #print(solution_mask)
+
+    # now multiply the puzzle by the mask to get the result
+    print('\nSolution Array')
+    solution_array = solution_mask * puzzle_array
+    print(solution_array)
+
+else:
+    print("No solution found.")
