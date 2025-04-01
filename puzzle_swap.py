@@ -1,0 +1,55 @@
+# puzzle_swap.py
+# Bill Hanson
+#
+# Inputs a puzzle input and creates a new puzzle by swapping either
+#   two rows or two columns
+
+
+# get imports
+import numpy as np
+
+# define functions
+
+def load_puzzle_npz():
+    # loads the puzzle from npz file where row and column targets
+    #   are already defined
+    puzzle_data = np.load('10x10_0.2.npz')
+    puzzle_a = puzzle_data['arr_0']
+    r_tgt = puzzle_data['arr_1']
+    c_tgt = puzzle_data['arr_2']
+    p_size = puzzle_a.shape[0]
+
+    return puzzle_a, p_size, c_tgt, r_tgt
+
+def load_puzzle_csv():
+    # takes a csv file and returns the puzzle_array, puzzle size, 
+    #    and row and column targets
+    # input from csv
+    input_a = np.loadtxt("x_8x8_1.csv", 
+                           delimiter=',', dtype=int)  # note, need a '0' at 0,0
+    # We know the array is square, so just pick 1st element of shape
+    input_size = input_a.shape[0]
+
+    # strip off row and column targets
+    c_tgt = input_a[0,1:input_size]
+    r_tgt = input_a[1:input_size,0]
+
+    # delete the target row and column
+    tmp_arr = np.delete(input_a, 0, 0)        # delete top row
+    puzzle_a = np.delete(tmp_arr, 0, 1)     # delete first column
+    p_size = input_size - 1
+    return puzzle_a, p_size, c_tgt, r_tgt
+
+def swap_rows(puzzle_a, r_tgt, r1, r2):
+    puzzle_a[[r1,r2]] = puzzle_a[[r2,r1]]
+    r_tgt[r1], r_tgt[r2] = r_tgt[r2], r_tgt[r1]
+
+    return puzzle_a, r_tgt
+
+puzzle_a, p_size, c_tgt, r_tgt = load_puzzle_csv()
+print(r_tgt)
+print(puzzle_a)
+puzzle_b, r_tgt_b = swap_rows(puzzle_a, r_tgt, 0, 1)
+print(r_tgt_b)
+print(puzzle_a)
+#%% End puzzle_swap

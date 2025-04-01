@@ -8,6 +8,14 @@ import numpy as np
 import random
 
 # define functions
+def weighted_randint():
+    elements = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    weights = [0.105, 0.123, 0.11, 0.11, 0.12, 0.1, 0.112, 0.1, 0.12]
+
+    weighted_integer = random.choices(elements, weights, k=1)
+    
+    return weighted_integer[0]
+
 def create_puzzle(p_size, prob):
     # creates a puzzle given a puzzle size and probability of a number
     puzzle = np.zeros([p_size, p_size],
@@ -15,7 +23,7 @@ def create_puzzle(p_size, prob):
     for i in range(p_size):
         for j in range(p_size):
             if random.random() < prob:
-                puzzle[i,j] = random.randint(1,9)
+                puzzle[i,j] = weighted_randint()
             else:
                 puzzle[i,j] = 0
     return puzzle
@@ -34,9 +42,9 @@ def create_targets(puzzle, p_size):
     for i in range(puzzle_size):    # check to make sure that we don't have any empty rows or columns
                                     # if so, add a random number to the row or column
         if row_targets[i] == 0:
-            puzzle[i,(random.randint(0,puzzle_size-1))] = random.randint(1,9)
+            puzzle[i,(random.randint(0,puzzle_size-1))] = weighted_randint()
         if col_targets[i] == 0:
-            puzzle[(random.randint(0,puzzle_size-1)),i] = random.randint(1,9)
+            puzzle[(random.randint(0,puzzle_size-1)),i] = weighted_randint()
     
     # re-sum the rows and columns to recreate targets
     for i in range(puzzle_size):
@@ -50,7 +58,7 @@ def finish_puzzle(puzzle, p_size):
     for i in range(p_size):
         for j in range(p_size):
             if puzzle[i,j] == 0:
-                puzzle[i,j] = random.randint(1,9)
+                puzzle[i,j] = weighted_randint()
     return puzzle
 
 # Constants
@@ -77,8 +85,8 @@ np.savez(name_string, puzzle, row_targets, col_targets)
 
 # just to check, let's reload the puzzle and print it out
 # load the puzzle  
-'''
-puzzle_data = np.load('puzzle.npz')
+
+puzzle_data = np.load(name_string)
 puzzle = puzzle_data['arr_0']
 row_targets = puzzle_data['arr_1']
 col_targets = puzzle_data['arr_2']
@@ -88,5 +96,5 @@ print(puzzle)
 print('Row Targets:')
 print(row_targets)
 print('Column Targets:')
-print(col_targets)'
-''' 
+print(col_targets)
+ 

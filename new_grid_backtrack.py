@@ -11,7 +11,7 @@ def load_puzzle_csv():
     # takes a csv file and returns the puzzle_array, puzzle size, 
     #    and row and column targets
     # input from csv
-    input_a = np.loadtxt("x_8x8_1.csv", 
+    input_a = np.loadtxt("x_8x8_s.csv", 
                             delimiter=',', dtype=int)  # note, need a '0' at 0,0
     # We know the array is square, so just pick 1st element of shape
     input_size = input_a.shape[0]
