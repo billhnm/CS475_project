@@ -8,7 +8,7 @@
 import numpy as np
 from puzzle_input import load_puzzle_csv as load_puzzle, create_masks, initial_cut
 from subset_finding import bf_find_subsets as find_subsets
-from mask_operations import find_invalid_nums, find_required_nums
+from validity_operations import find_invalid_nums, find_required_nums
 
 # Main program
 
@@ -111,9 +111,9 @@ while not done:
         done = True
         print('done condition met')
     iter += 1
-    if iter > 1000:
+    if iter > 250:
         done = True
-        print('No solution after 1000 iterations')
+        print('No solution after 250 iterations')
 
 print("Exited loop")
 
@@ -125,7 +125,7 @@ print(solution_array)
 
 print(f'Number of elements in solution array: {np.sum(solution_array > 0)}')
 
-if iter > 1000:
-    print('No solution found after 1000 iterations')
+if iter > 250:
+    print('No solution found after 250 iterations')
 else: 
     print(f'Done in {iter} iterations')
