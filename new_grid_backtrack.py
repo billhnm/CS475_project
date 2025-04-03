@@ -174,50 +174,56 @@ puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_targets, column_targets
 
 print(puzzle_array)
 # print(puzzle_mask)
+def create_bt_array(p_size, p_array, p_mask, r_tgts, c_tgts):
+    b_mask = []
+    for cell_index in range(p_size * p_size):
+        row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
+                                                                                r_tgts, c_tgts, 
+                                                                                p_array, p_mask, p_size)
 
-for cell_index in range(puzzle_size * puzzle_size):
-    row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
+        row_subsets = find_subsets(row_nums, row_tgt, row_mask)
+        col_subsets = find_subsets(col_nums, col_tgt, col_mask)
+
+        valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
+
+        if valid_cell == False:
+            p_mask[row, column] = -1
+
+    # print(puzzle_mask)
+    # redo mask for backtrack: change -1 to 0, 0 to plus one -- just add 1 to everything
+    changer_mask = np.ones([p_size, p_size], dtype=int)
+    b_mask = p_mask + changer_mask
+
+    # print(bt_mask)
+    # now multiply bt_mask * puzzle -- valid numbers remain, invalids replaced by zeros
+    bt_p_array = puzzle_array * b_mask
+
+    # print(bt_puzzle_array)
+
+    # one more scrub with new array for invalid numbers
+    for cell_index in range(puzzle_size * puzzle_size):
+        row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
                                                                                 row_targets, column_targets, 
-                                                                                puzzle_array, puzzle_mask, puzzle_size)
+                                                                                bt_p_array, b_mask, puzzle_size)
 
-    row_subsets = find_subsets(row_nums, row_tgt, row_mask)
-    col_subsets = find_subsets(col_nums, col_tgt, col_mask)
+        row_subsets = just_find_subsets(row_nums, row_tgt)
+        col_subsets = just_find_subsets(col_nums, col_tgt)
 
-    valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
+        valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
 
-    if valid_cell == False:
-        puzzle_mask[row, column] = -1
+        if valid_cell == False:
+            b_mask[row, column] = 0
 
-# print(puzzle_mask)
-# redo mask for backtrack: change -1 to 0, 0 to plus one -- just add 1 to everything
-changer_mask = np.ones([puzzle_size, puzzle_size], dtype=int)
-bt_mask = puzzle_mask + changer_mask
+    b_p_array = p_array * b_mask
+
+    return b_p_array
 
 # print(bt_mask)
+bt_puzzle_array = create_bt_array(puzzle_size, puzzle_array, puzzle_mask, row_targets, column_targets)
 
-# now multiply bt_mask * puzzle -- valid numbers remain, invalids replaced by zeros
-bt_puzzle_array = puzzle_array * bt_mask
+
 
 # print(bt_puzzle_array)
-
-# one more scrub with new array for invalid numbers
-for cell_index in range(puzzle_size * puzzle_size):
-    row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
-                                                                                row_targets, column_targets, 
-                                                                                bt_puzzle_array, bt_mask, puzzle_size)
-
-    row_subsets = just_find_subsets(row_nums, row_tgt)
-    col_subsets = just_find_subsets(col_nums, col_tgt)
-
-    valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
-
-    if valid_cell == False:
-        bt_mask[row, column] = 0
-
-# print(bt_mask)
-bt_puzzle_array = puzzle_array * bt_mask
-
-print(bt_puzzle_array)
 
 # main solver using solve_grid
 
