@@ -8,6 +8,7 @@
 # Get imports
 from itertools import combinations
 import numpy as np
+from validity_operations import is_cell_valid
 
 # Define functions
 def bf_find_combinations(input_list, length):

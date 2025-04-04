@@ -4,11 +4,35 @@
 # Main solver logic: steps through puzzle rows and columns
 #   Calls other modules for operations
 #
-# Get imports
+# loads and runs appropriate modules given the type of analysis and data file
+# standard imports
 import numpy as np
-from puzzle_input import load_puzzle_csv as load_puzzle, create_masks, initial_cut
-from subset_finding import bf_find_subsets as find_subsets
 from validity_operations import find_invalid_nums, find_required_nums
+from puzzle_input import create_masks, initial_cut
+
+algo_to_run = int(input('Enter algorithm: 1 = brute force, 2 = dynamic programming, 3 = backtracking - '))
+
+if algo_to_run == 1:
+    from subset_finding import bf_find_subsets as find_subsets
+    from subset_finding import bf_find_combinations
+elif algo_to_run == 2:
+    from subset_finding import dp_find_subsets as find_subsets
+elif algo_to_run == 3:
+    from ortools.sat.python import cp_model
+    from subset_finding import bt_determine_row_column, bt_find_subsets, bt_just_find_subsets, create_bt_array
+    from validity_operations import is_cell_valid, create_bt_mask
+else: 
+    print('Algorithm not recognized')
+
+type_input = int(input('What type of file? 1 for csv, 2 for npz: '))
+
+if type_input == 1: 
+    from puzzle_input import load_puzzle_csv as load_puzzle
+elif type_input == 2:
+    from puzzle_input import load_puzzle_npz as load_puzzle
+else:
+    print('Unrecognized file type')
+
 
 # Main program
 
@@ -27,17 +51,18 @@ puzzle_size = puzzle_array.shape[0]
 
 main_col_mask, main_row_mask, puzzle_mask = create_masks(puzzle_size)
 
-print(row_tgt, col_tgt)
-print(puzzle_array)
+#print(row_tgt, col_tgt)
+#print(puzzle_array)
 
 # Make the first cut 
 puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_tgt, col_tgt, puzzle_mask)
-print(puzzle_mask)
+#print(puzzle_mask)
 
+# Main Row-wise solver -- calls either BF or DP functions
 iter = 0
 while not done:
     # print("Starting new iteration of the loop")
-    
+    old_puzzle_mask = puzzle_mask                   # save to check to see if we've made progress
     for i in range(puzzle_size):                    # step through the rows
         if main_row_mask[i] == 0:
             cur_row = puzzle_array[i,:]
@@ -102,15 +127,18 @@ while not done:
             puzzle_mask[:,i] = new_col_mask
         #'''
      
-    print('targets (r,c) ', row_tgt, col_tgt)
-    print('main row mask: ', main_row_mask)
-    print('main col mask: ', main_col_mask)
-    print('puzzle mask: ', puzzle_mask)
+    #print('targets (r,c) ', row_tgt, col_tgt)
+    #print('main row mask: ', main_row_mask)
+    #print('main col mask: ', main_col_mask)
+    #print('puzzle mask: ', puzzle_mask)
     
     if np.all(puzzle_mask != 0) or (np.all(main_row_mask == 1) and np.all(main_col_mask == 1)):
         done = True
         print('done condition met')
     iter += 1
+    if iter > 10 and np.array_equal(old_puzzle_mask, puzzle_mask):
+        done = True
+        print(f'Stalled after {iter} iterations')
     if iter > 250:
         done = True
         print('No solution after 250 iterations')

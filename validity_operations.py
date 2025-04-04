@@ -7,6 +7,7 @@
 
 # Get imports
 import numpy as np
+from subset_finding import bt_determine_row_column, bt_find_subsets, bt_just_find_subsets
 
 # define functions
 
@@ -58,12 +59,12 @@ def is_cell_valid(c_value, r_subsets, c_subsets):
 def create_bt_mask(p_size, p_array, p_mask, r_tgts, c_tgts):
     b_mask = []
     for cell_index in range(p_size * p_size):
-        row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = determine_row_column(cell_index, 
+        row, column, row_nums, col_nums, row_mask, col_mask, row_tgt, col_tgt, cell_value = bt_determine_row_column(cell_index, 
                                                                                 r_tgts, c_tgts, 
                                                                                 p_array, p_mask, p_size)
 
-        row_subsets = find_subsets(row_nums, row_tgt, row_mask)
-        col_subsets = find_subsets(col_nums, col_tgt, col_mask)
+        row_subsets = bt_find_subsets(row_nums, row_tgt, row_mask)
+        col_subsets = bt_find_subsets(col_nums, col_tgt, col_mask)
 
         valid_cell = is_cell_valid(cell_value, row_subsets, col_subsets)
 

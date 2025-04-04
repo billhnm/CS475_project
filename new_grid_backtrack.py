@@ -26,6 +26,17 @@ def load_puzzle_csv():
     p_size = input_size - 1
     return puzzle_a, p_size, c_tgt, r_tgt
 
+def load_puzzle_npz():
+    # loads the puzzle from npz file where row and column targets
+    #   are already defined
+    puzzle_data = np.load('10x10_0.3.npz')
+    puzzle_a = puzzle_data['arr_0']
+    r_tgt = puzzle_data['arr_1']
+    c_tgt = puzzle_data['arr_2']
+    p_size = puzzle_a.shape[0]
+
+    return puzzle_a, p_size, c_tgt, r_tgt
+
 def create_masks(p_size):
     # sets up boolean masks given puzzle size
     c_mask = np.zeros([p_size], dtype=int)
@@ -160,7 +171,9 @@ def solve_grid(p_array, r_tgts, c_tgts, p_size):
     else:
         return None    
 
-puzzle_array, puzzle_size, column_targets, row_targets = load_puzzle_csv()
+#puzzle_array, puzzle_size, column_targets, row_targets = load_puzzle_csv()
+
+puzzle_array, puzzle_size, column_targets, row_targets = load_puzzle_npz()
 
 column_mask, row_mask, puzzle_mask = create_masks(puzzle_size)
 

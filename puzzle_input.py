@@ -13,7 +13,7 @@ import numpy as np
 def load_puzzle_npz():
     # loads the puzzle from npz file where row and column targets
     #   are already defined
-    puzzle_data = np.load('10x10_0.2.npz')
+    puzzle_data = np.load('10x10_0.3.npz')
     puzzle_a = puzzle_data['arr_0']
     r_tgt = puzzle_data['arr_1']
     c_tgt = puzzle_data['arr_2']
