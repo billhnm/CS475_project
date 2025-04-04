@@ -6,14 +6,22 @@
 
 # get imports
 import numpy as np
+import os
+
+# define path
+cur_dir = os.getcwd()
+work_dir = 'CS475_project'
+csv_name = '8x8_2.csv'
+csv_input_name = os.path.join(cur_dir, work_dir, csv_name)
+npz_name = '10x10_0.2.npz'
+npz_input_name = os.path.join(cur_dir, work_dir, npz_name)
 
 # define functions
 
-
-def load_puzzle_npz():
+def load_puzzle_npz(n_in_name):
     # loads the puzzle from npz file where row and column targets
     #   are already defined
-    puzzle_data = np.load('10x10_0.3.npz')
+    puzzle_data = np.load(n_in_name)
     puzzle_a = puzzle_data['arr_0']
     r_tgt = puzzle_data['arr_1']
     c_tgt = puzzle_data['arr_2']
@@ -21,11 +29,11 @@ def load_puzzle_npz():
 
     return puzzle_a, p_size, c_tgt, r_tgt
 
-def load_puzzle_csv():
+def load_puzzle_csv(c_in_name):
     # takes a csv file and returns the puzzle_array, puzzle size, 
     #    and row and column targets
     # input from csv
-    input_a = np.loadtxt("x_8x8_1.csv", 
+    input_a = np.loadtxt(c_in_name, 
                            delimiter=',', dtype=int)  # note, need a '0' at 0,0
     # We know the array is square, so just pick 1st element of shape
     input_size = input_a.shape[0]

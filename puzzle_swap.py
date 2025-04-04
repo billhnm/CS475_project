@@ -10,6 +10,11 @@ import numpy as np
 from itertools import combinations
 import os
 
+# set up working dir
+cur_dir = os.getcwd()
+work_dir = 'CS475_project'
+input_name = '8x8_4.csv'
+input_path = os.path.join(cur_dir, work_dir, input_name)
 # define functions
 
 def load_puzzle_npz():
@@ -27,7 +32,7 @@ def load_swap_puzzle():
     # Loads in a csv puzzle
     # Does not separate the targets from the puzzle, since we're going to swap them along with the rows
     # input from csv
-    swap_grid = np.loadtxt("x_8x8_1.csv", 
+    swap_grid = np.loadtxt(input_path, 
                            delimiter=',', dtype=int)  # note, need a '0' at 0,0
     # We know the array is square, so just pick 1st element of shape
     s_size = swap_grid.shape[0]
@@ -55,10 +60,9 @@ puzzle_a, puzzle_size = load_swap_puzzle()
 swap_combos = determine_swap_combos(puzzle_size)
 
 # set up directories
-cur_dir = os.getcwd()
-work_dir = 'CS475_project'
+
 data_dir = 'data'
-file_stub = '8x8_1'
+file_stub = '8x8_4'
 
 for i in range(len(swap_combos)):
     puz_a = puzzle_a
@@ -68,8 +72,15 @@ for i in range(len(swap_combos)):
     f_name = file_stub + 'r' + str(i) + '.csv'
     file_path = os.path.join(cur_dir, work_dir, data_dir, f_name)
     np.savetxt(file_path, puz_b, delimiter=',', fmt='%d')
-    
-
+   
+for i in range(len(swap_combos)):
+    puz_a = puzzle_a
+    c1 = swap_combos[i][0]
+    c2 = swap_combos[i][1]
+    puz_b = swap_columns(puz_a, c1, c2)
+    f_name = file_stub + 'c' + str(i) + '.csv'
+    file_path = os.path.join(cur_dir, work_dir, data_dir, f_name)
+    np.savetxt(file_path, puz_b, delimiter=',', fmt='%d')
 #print(cur_dir)
 
 

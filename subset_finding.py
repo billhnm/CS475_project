@@ -8,7 +8,7 @@
 # Get imports
 from itertools import combinations
 import numpy as np
-from validity_operations import is_cell_valid
+#from validity_operations import is_cell_valid
 
 # Define functions
 def bf_find_combinations(input_list, length):
@@ -95,6 +95,23 @@ def dp_find_subsets(nums, target, l_mask):
                     t_mask[k] = -1                          # not in the last combo, not needed
 
     return val_combos, t_mask
+
+def is_cell_valid(c_value, r_subsets, c_subsets):
+    r_valid = False
+    c_valid = False
+    cell_valid = False
+    for i in range(len(r_subsets)):
+        if c_value in r_subsets[i]:
+            r_valid = True
+            continue
+    for j in range(len(c_subsets)):
+        if c_value in c_subsets[j]:
+            c_valid = True
+            continue
+    if r_valid == True and c_valid == True:
+        cell_valid = True
+    
+    return cell_valid
 
 def bt_determine_row_column(c_index, r_tgts, c_tgts, p_array, p_mask, p_size):
     rw = c_index // p_size

@@ -185,7 +185,7 @@ puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_targets, column_targets
 #   if so, mark it and try the next value to see if sum is <= target
 # first, scrub through array and mark valid cells 
 
-print(puzzle_array)
+# print(puzzle_array)
 # print(puzzle_mask)
 def create_bt_array(p_size, p_array, p_mask, r_tgts, c_tgts):
     b_mask = []
@@ -202,16 +202,12 @@ def create_bt_array(p_size, p_array, p_mask, r_tgts, c_tgts):
         if valid_cell == False:
             p_mask[row, column] = -1
 
-    # print(puzzle_mask)
     # redo mask for backtrack: change -1 to 0, 0 to plus one -- just add 1 to everything
     changer_mask = np.ones([p_size, p_size], dtype=int)
     b_mask = p_mask + changer_mask
-
-    # print(bt_mask)
+    
     # now multiply bt_mask * puzzle -- valid numbers remain, invalids replaced by zeros
     bt_p_array = puzzle_array * b_mask
-
-    # print(bt_puzzle_array)
 
     # one more scrub with new array for invalid numbers
     for cell_index in range(puzzle_size * puzzle_size):
@@ -234,28 +230,22 @@ def create_bt_array(p_size, p_array, p_mask, r_tgts, c_tgts):
 # print(bt_mask)
 bt_puzzle_array = create_bt_array(puzzle_size, puzzle_array, puzzle_mask, row_targets, column_targets)
 
-
-
-# print(bt_puzzle_array)
-
-# main solver using solve_grid
+# main BT solver using solve_grid
 
 solution = solve_grid(bt_puzzle_array, row_targets, column_targets, puzzle_size) 
 
 # assuming we get a solution, print it out
 if solution:
     # create the (0,1) mask
-    # print('Mask')
     solution_mask = []
     for i in range(puzzle_size):
         rw_mask = [solution[(i, j)] for j in range(puzzle_size)]
-        solution_mask.append(rw_mask)
-    #print(solution_mask)
+        solution_mask.append(rw_mask)    
 
     # now multiply the puzzle by the mask to get the result
-    print('\nSolution Array')
+    # print('\nSolution Array')
     solution_array = solution_mask * puzzle_array
-    print(solution_array)
+    #print(solution_array)
 
 else:
     print("No solution found.")
