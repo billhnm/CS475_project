@@ -13,10 +13,10 @@ import os
 # set up working dir
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
-input_name = '8x8_4.csv'
+input_name = 's20x20_1_conv.csv'
 input_path = os.path.join(cur_dir, work_dir, input_name)
-# define functions
-
+# define functions 
+'''
 def load_puzzle_npz():
     # loads the puzzle from npz file where row and column targets
     #   are already defined
@@ -27,7 +27,7 @@ def load_puzzle_npz():
     p_size = puzzle_a.shape[0]
 
     return puzzle_a, p_size, c_tgt, r_tgt
-
+'''
 def load_swap_puzzle():
     # Loads in a csv puzzle
     # Does not separate the targets from the puzzle, since we're going to swap them along with the rows
@@ -62,7 +62,7 @@ swap_combos = determine_swap_combos(puzzle_size)
 # set up directories
 
 data_dir = 'data'
-file_stub = '8x8_4'
+file_stub = '20x20_1'
 
 for i in range(len(swap_combos)):
     puz_a = puzzle_a

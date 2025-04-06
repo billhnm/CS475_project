@@ -1,0 +1,102 @@
+8x8
+                    Runtime
+                      count      mean       std      min       25%      50%      75%      max
+Algorithm
+Backtracking          223.0  0.019927  0.007003  0.01437  0.015135  0.01560  0.02968  0.03184
+Brute_Force           223.0  0.001459  0.000267  0.00121  0.001230  0.00153  0.00161  0.00305
+Dynamic_Programming   223.0  0.001401  0.000172  0.00120  0.001240  0.00146  0.00150  0.00233
+                    Iterations
+                         count mean  std  min  25%  50%  75%  max
+Algorithm
+Backtracking             223.0  1.0  0.0  1.0  1.0  1.0  1.0  1.0
+Brute_Force              223.0  3.0  0.0  3.0  3.0  3.0  3.0  3.0
+Dynamic_Programming      223.0  3.0  0.0  3.0  3.0  3.0  3.0  3.0
+
+Median:                      Runtime
+Algorithm
+Backtracking         0.01560
+Brute_Force          0.00153
+Dynamic_Programming  0.00146
+Skew:                       Runtime
+Algorithm
+Backtracking         0.832058
+Brute_Force          2.280007
+Dynamic_Programming  1.175930
+
+
+
+10x10
+                    Runtime
+                      count      mean       std      min      25%       50%       75%      max
+Algorithm
+Backtracking          360.0  0.057305  0.007603  0.04415  0.04726  0.061125  0.062262  0.07988
+Brute_Force           360.0  0.003448  0.000707  0.00263  0.00278  0.003755  0.004070  0.00733
+Dynamic_Programming   360.0  0.003146  0.000639  0.00235  0.00249  0.003540  0.003730  0.00450
+                    Iterations
+                         count  mean       std  min   25%  50%  75%  max
+Algorithm
+Backtracking             360.0  1.00  0.000000  1.0  1.00  1.0  1.0  1.0
+Brute_Force              360.0  4.75  1.481078  3.0  3.75  4.5  5.5  7.0
+Dynamic_Programming      360.0  4.75  1.481078  3.0  3.75  4.5  5.5  7.0
+
+Median:                       Runtime
+Algorithm
+Backtracking         0.061125
+Brute_Force          0.003755
+Dynamic_Programming  0.003540
+Skew:                       Runtime
+Algorithm
+Backtracking        -0.444555
+Brute_Force          0.726855
+Dynamic_Programming  0.025736
+
+
+12x12
+                    Runtime
+                      count      mean       std      min       25%      50%       75%      max
+Algorithm
+Backtracking          527.0  0.199311  0.022813  0.15356  0.184745  0.20042  0.217510  0.26576
+Brute_Force           527.0  0.003712  0.001417  0.00248  0.002860  0.00317  0.004855  0.00960
+Dynamic_Programming   527.0  0.003063  0.001058  0.00221  0.002400  0.00253  0.003885  0.00593
+                    Iterations
+                         count      mean       std  min  25%  50%  75%  max
+Algorithm
+Backtracking             527.0  1.000000  0.000000  1.0  1.0  1.0  1.0  1.0
+Brute_Force              527.0  3.751423  1.301094  3.0  3.0  3.0  4.5  6.0
+Dynamic_Programming      527.0  3.751423  1.301094  3.0  3.0  3.0  4.5  6.0
+
+Median:                      Runtime
+Algorithm
+Backtracking         0.20042
+Brute_Force          0.00317
+Dynamic_Programming  0.00253
+Skew:                       Runtime
+Algorithm
+Backtracking         0.310654
+Brute_Force          1.201891
+Dynamic_Programming  1.118024
+
+15x15
+                    Runtime
+                      count      mean       std      min      25%      50%      75%      max
+Algorithm
+Backtracking          419.0  1.948780  0.195017  1.47873  1.84697  1.98757  2.08651  2.43053
+Brute_Force           419.0  0.005898  0.000836  0.00489  0.00503  0.00644  0.00663  0.00908
+Dynamic_Programming   419.0  0.005105  0.000618  0.00435  0.00446  0.00547  0.00562  0.00733
+                    Iterations
+                         count      mean       std  min  25%  50%  75%  max
+Algorithm
+Backtracking             419.0  1.000000  0.000000  1.0  1.0  1.0  1.0  1.0
+Brute_Force              419.0  4.501193  0.500596  4.0  4.0  5.0  5.0  5.0
+Dynamic_Programming      419.0  4.501193  0.500596  4.0  4.0  5.0  5.0  5.0
+
+Median:                      Runtime
+Algorithm
+Backtracking         1.98757
+Brute_Force          0.00644
+Dynamic_Programming  0.00547
+Skew:                       Runtime
+Algorithm
+Backtracking        -0.553828
+Brute_Force          0.198929
+Dynamic_Programming  0.234974

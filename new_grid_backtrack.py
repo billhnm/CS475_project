@@ -29,7 +29,7 @@ def load_puzzle_csv():
 def load_puzzle_npz():
     # loads the puzzle from npz file where row and column targets
     #   are already defined
-    puzzle_data = np.load('10x10_0.3.npz')
+    puzzle_data = np.load('s10x10_3.npz')
     puzzle_a = puzzle_data['arr_0']
     r_tgt = puzzle_data['arr_1']
     c_tgt = puzzle_data['arr_2']
@@ -243,7 +243,7 @@ if solution:
         solution_mask.append(rw_mask)    
 
     # now multiply the puzzle by the mask to get the result
-    # print('\nSolution Array')
+    #print('\nSolution Array')
     solution_array = solution_mask * puzzle_array
     #print(solution_array)
 

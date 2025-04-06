@@ -169,7 +169,7 @@ def find_required_nums(combos, nums, l_mask):
 
 # Declare needed variables
 done = False
-
+'''
 #input from csv
 input_arr = np.loadtxt("x_8x8_1.csv",
                        delimiter = ',', dtype = int)  # note, need a '0' at 0,0
@@ -179,26 +179,26 @@ puzzle_array, puzzle_size, col_tgt, row_tgt = get_puzzle(input_arr)
 ''' 
 
 # load the puzzle from npz file 
-puzzle_data = np.load('10x10_0.2.npz')
+puzzle_data = np.load('20x20_0.05-9.npz')
 puzzle_array = puzzle_data['arr_0']
 row_tgt = puzzle_data['arr_1']
 col_tgt = puzzle_data['arr_2']
-'''
+
 puzzle_size = puzzle_array.shape[0]
 
 main_col_mask, main_row_mask, puzzle_mask = create_masks(puzzle_size)
 
-print(row_tgt, col_tgt)
-print(puzzle_array)
+#print(row_tgt, col_tgt)
+#print(puzzle_array)
 
 # Make the first cut 
 puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_tgt, col_tgt, puzzle_mask)
-print(puzzle_mask)
+#print(puzzle_mask)
 
 iter = 0
 while not done:
     #print('Starting new loop iteration')
-    
+    old_puzzle_mask = puzzle_mask
 
     for i in range(puzzle_size):                    # step through the rows
         if main_row_mask[i] == 0:
@@ -276,13 +276,15 @@ while not done:
     
     if np.all(puzzle_mask != 0) or (np.all(main_row_mask == 1) and np.all(main_col_mask == 1)):
         done = True
-        print('done condition met')
-    #else:
-        #print('not done yet')
-    iter += 1
-    if iter > 1000:
+        print(f'Done in {iter} iterations')
+    elif iter > 25 and np.array_equal(old_puzzle_mask, puzzle_mask):
         done = True
-        #print('No solution after 2500 iterations')
+        print(f'Stalled after {iter} iterations')
+    elif iter > 250:
+        done = True
+        print('No solution after 250 iterations')
+    
+    iter += 1
 
     # Additional debug prints to check the loop condition
     # print(f"done: {done}")
@@ -292,12 +294,9 @@ while not done:
 
 solution_array = puzzle_mask * puzzle_array
 
-print('targets (r,c) ', row_tgt, col_tgt)
+# print('targets (r,c) ', row_tgt, col_tgt)
 
 print(solution_array)
 
 print(f'Number of elements in solution array: {np.sum(solution_array > 0)}')
 
-if iter > 1000:
-    print('No solution found after 1000 iterations')
-else: print(f'Done in {iter} iterations')
