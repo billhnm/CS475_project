@@ -1,0 +1,133 @@
+# stat_analysis.py
+# Bill Hanson
+#
+# Performs statistical analysis of CS475 data. 
+#   Includes plots, descriptive stats, paired t-tests and ANOVA
+
+# Imports
+import pandas as pd
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import ttest_rel, f_oneway, shapiro
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from sklearn.metrics import mean_squared_error, r2_score
+
+# set up file import
+cur_dir = os.getcwd()
+work_dir = 'CS475_project'
+allruns_fname = 'All_runs_combined.pkl'
+allruns_input_name = os.path.join(cur_dir, work_dir, allruns_fname)
+
+df_all = pd.read_pickle(allruns_input_name)
+# rename 'Puzzle size' to 'Puzzle_size'
+df_all = df_all.rename(columns = {'Puzzle size': 'Puzzle_size'})
+
+# separate by algorithm
+df_bt = df_all.loc[df_all['Algorithm'] == 'Backtracking']
+df_bf = df_all.loc[df_all['Algorithm'] == 'Brute_Force']
+df_dp = df_all.loc[df_all['Algorithm'] == 'Dynamic_Programming']
+df_bf_dp = df_all.loc[df_all['Algorithm'] != 'Backtracking']
+
+#print(df_bt.head)
+# put them all into one dataframe
+# df_all = pd.concat([r8_df, r10_df, r12_df, r15_df, r20_df], ignore_index=True)
+#df_bf_dp = pd.concat([bf_df, dp_df], ignore_index=True)
+
+# looks like backtracking time grows exponentially
+# set up exponential curve fit
+x = df_dp['Puzzle_size']
+x = x ** 2                  # regress on number of spots
+y = df_dp['Runtime']
+y = y[y > 0]                # Avoid log(0)
+x = x.loc[y.index]
+
+log_y = np.log(y)
+
+# perform linear regression on log(y)
+coeffs = np.polyfit(x, log_y, deg = 1)
+
+log_a, log_b = coeffs[1], coeffs[0]
+
+print(coeffs)
+print(log_a, log_b)
+
+a = np.exp(log_a)
+b = np.exp(log_b)
+
+# predictions
+y_fit = a * (b ** x)
+
+# plot the results
+plt.scatter(x, y, label = 'Runtime')
+plt.plot(x, y_fit, color = 'green', label = 'Exponential Fit')
+plt.legend()
+plt.title('Exponential Fit: y = a * b^x')
+plt.show()
+
+print(f'Fitted model: y = {a:.3e} * {b:.3f}^x')
+
+# look at fit quality via r2 and MSE
+r2 = r2_score(y, y_fit)
+mse = mean_squared_error(y, y_fit)
+
+print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
+
+'''
+# OLS regression on BF and DP  runtime vs puzzle size
+bf_result = sm.OLS.from_formula(formula = 'Runtime ~ Puzzle_size', data = df_bf).fit()
+dp_result = sm.OLS.from_formula(formula = 'Runtime ~ Puzzle_size', data = df_dp).fit()
+
+print(bf_result.summary())
+print(bf_result.summary())
+'''
+'''
+# initial description and summary stats
+summary1 = df_all.groupby(['Puzzle size', 'Algorithm'])[['Runtime']].describe()
+print(summary1)
+#summary2 = df_all.groupby('Puzzle_size', 'Algorithm')[['Iterations']].describe()
+#print(summary2)
+
+print()
+df_median = df_all.groupby(['Puzzle size', 'Algorithm'])[['Runtime']].median() 
+df_skew = df_all.groupby(['Puzzle size', 'Algorithm'])[['Runtime']].skew()
+print(f'Median: {df_median}')
+print()
+print(f'Skew: {df_skew}')
+print()
+'''
+
+# Create initial boxplots and histogram
+'''
+# Line plot
+sns.lineplot(data = df_bf_dp, x = 'Puzzle size', y = 'Runtime',  hue = 'Algorithm', estimator = 'mean')
+plt.suptitle("Runtime by Puzzle Size and Algorithm")
+plt.title('Brute Force vs Dynamic Programming', fontsize = 10)
+plt.show()
+
+
+sns.boxplot(x = 'Puzzle size', y = 'Runtime', hue = 'Algorithm', data = df_bf_dp)
+plt.title("Runtime Distribution by Puzzle Size and Algorithm")
+plt.title('Brute Force vs Dynamic Programming', fontsize = 10)
+plt.show()
+'''
+'''
+# histogram
+sns.histplot(data = df_bf_dp, x = 'Runtime', hue = 'Puzzle size', bins = 45, kde = False, element = 'step')
+plt.suptitle('Runtime Distribution by Puzzle Size')
+plt.title('Brute Force and Dynamic Programming', fontsize = 10)
+plt.show()
+
+sns.histplot(data = df_bt, x = 'Runtime', hue = 'Puzzle size', bins = 60, kde = False, element = 'step')
+plt.title('Runtime Distribution for Backtracking')
+
+plt.show()
+'''
+'''
+# Save the combined file 
+output_fname = 'All_runs_combined.pkl'
+combined_name = os.path.join(cur_dir, work_dir, output_fname)
+df_all.to_pickle(combined_name)
+'''

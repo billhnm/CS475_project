@@ -11,4 +11,7 @@ Observed difference - BF vs DP: 0.0006, p-value: 0.0000
 15x15
 Observed difference - BF vs DP: 0.0008, p-value: 0.0000
 
+20x20
+Observed difference - BF vs DP: 0.0050, p-value: 0.0000
+
 Interpretation, difference in means is statistically significant

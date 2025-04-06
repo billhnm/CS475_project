@@ -1,0 +1,55 @@
+Brute Force
+
+                            OLS Regression Results
+==============================================================================
+Dep. Variable:                Runtime   R-squared:                       0.853
+Model:                            OLS   Adj. R-squared:                  0.853
+Method:                 Least Squares   F-statistic:                 1.120e+04
+Date:                Sun, 06 Apr 2025   Prob (F-statistic):               0.00
+Time:                        12:35:09   Log-Likelihood:                 9129.6
+No. Observations:                1929   AIC:                        -1.826e+04
+Df Residuals:                    1927   BIC:                        -1.824e+04
+Df Model:                           1
+Covariance Type:            nonrobust
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept      -0.0109      0.000    -63.047      0.000      -0.011      -0.011
+Puzzle_size     0.0013   1.23e-05    105.850      0.000       0.001       0.001
+==============================================================================
+Omnibus:                       23.671   Durbin-Watson:                   0.075
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               14.738
+Skew:                          -0.007   Prob(JB):                     0.000631
+Kurtosis:                       2.572   Cond. No.                         50.1
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+Dynamic Programming
+
+                            OLS Regression Results
+==============================================================================
+Dep. Variable:                Runtime   R-squared:                       0.853
+Model:                            OLS   Adj. R-squared:                  0.853
+Method:                 Least Squares   F-statistic:                 1.120e+04
+Date:                Sun, 06 Apr 2025   Prob (F-statistic):               0.00
+Time:                        12:35:09   Log-Likelihood:                 9129.6
+No. Observations:                1929   AIC:                        -1.826e+04
+Df Residuals:                    1927   BIC:                        -1.824e+04
+Df Model:                           1
+Covariance Type:            nonrobust
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept      -0.0109      0.000    -63.047      0.000      -0.011      -0.011
+Puzzle_size     0.0013   1.23e-05    105.850      0.000       0.001       0.001
+==============================================================================
+Omnibus:                       23.671   Durbin-Watson:                   0.075
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               14.738
+Skew:                          -0.007   Prob(JB):                     0.000631
+Kurtosis:                       2.572   Cond. No.                         50.1
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
