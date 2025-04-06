@@ -45,7 +45,7 @@ output_list = []
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
 data_dir = 'data'
-file_stub = '20x20_'
+file_stub = '12x12_2_'
 file_type = '.csv'
 
 #npz_name = '10x10_0.2.npz'
@@ -63,7 +63,7 @@ file_type = '.csv'
 
 # set up loop to step through files in batch
 
-for i in range(400):
+for i in range(100):
     file_num = str(i)
     file_name = file_stub + file_num + file_type
     csv_input_name = os.path.join(cur_dir, work_dir, data_dir, file_name)
