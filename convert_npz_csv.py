@@ -8,8 +8,8 @@ cur_dir = os.getcwd()
 work_dir = 'CS475_project'
 new_wd = os.path.join(cur_dir, work_dir)
 data_dir = 'data'
-os.chdir(new_wd)
-file_stub = '12x12_0.2-'
+#os.chdir(new_wd)
+file_stub = '8x8_0.2-'
 
 # input_path = os.path.join(new_wd, input_name)
 # loop through puzzles
@@ -35,8 +35,8 @@ for i in range(100):
     full_p = np.insert(new_p, 0, new_ct, axis=0)
 
 
-    f_name = '12x12_2_' + str(i) + '.csv'
-    out_path = os.path.join(new_wd, data_dir, f_name)
+    f_name = '8x8_2_' + str(i) + '.csv'
+    out_path = os.path.join(data_dir, f_name)
     np.savetxt(out_path, full_p, delimiter=',', fmt='%d')
 
 

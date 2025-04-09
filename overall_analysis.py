@@ -11,6 +11,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import ttest_rel, f_oneway, shapiro
+from scipy.optimize import curve_fit
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 from sklearn.metrics import mean_squared_error, r2_score
@@ -18,12 +19,13 @@ from sklearn.metrics import mean_squared_error, r2_score
 # set up file import
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
-bf_fname = 'Brute_Force_25_04_06_1422.pkl'
-bf_input_name = os.path.join(cur_dir, work_dir, bf_fname)
-dp_fname = 'Dynamic_Programming_25_04_06_1423.pkl'
-dp_input_name = os.path.join(cur_dir, work_dir, dp_fname)
-bt_fname = 'Backtracking_25_04_06_1423.pkl'
-bt_input_name = os.path.join(cur_dir, work_dir, bt_fname)
+'''
+bf_fname = 'Brute_Force_25_04_08_1146.pkl'
+bf_input_name = os.path.join(cur_dir, bf_fname)
+dp_fname = 'Dynamic_Programming_25_04_08_1146.pkl'
+dp_input_name = os.path.join(cur_dir, dp_fname)
+bt_fname = 'Backtracking_25_04_08_1146.pkl'
+bt_input_name = os.path.join(cur_dir, bt_fname)
 
 df_bf = pd.read_pickle(bf_input_name)
 df_dp = pd.read_pickle(dp_input_name)
@@ -32,7 +34,13 @@ df_bt = pd.read_pickle(bt_input_name)
 # df_all = df_all.rename(columns = {'Puzzle size': 'Puzzle_size'})
 # put them all into one dataframe
 df_all = pd.concat([df_bf, df_dp, df_bt], ignore_index=True)
+'''
+# read into df_all
+df_fname = 'All_runs_combined.pkl'
+df_input_name = os.path.join(cur_dir, df_fname)
+df_all = pd.read_pickle(df_input_name)
 
+'''
 # count number solved by each algo
 bt_solved = len(df_all[(df_all['Algorithm'] == 'Backtracking') & (df_all['Output string'] == 'Solved')])
 print(f'{bt_solved}% of puzzles solved by Backtracking')
@@ -43,11 +51,11 @@ print(f'{dp_solved}% of puzzles solved by Dynamic Programming')
 
 end_conditions = df_all['Output string'].unique
 print(end_conditions)
-
+'''
 # separate by algorithm
-#df_bt = df_all.loc[df_all['Algorithm'] == 'Backtracking']
-#df_bf = df_all.loc[df_all['Algorithm'] == 'Brute_Force']
-#df_dp = df_all.loc[df_all['Algorithm'] == 'Dynamic_Programming']
+df_bt = df_all.loc[df_all['Algorithm'] == 'Backtracking']
+df_bf = df_all.loc[df_all['Algorithm'] == 'Brute_Force']
+df_dp = df_all.loc[df_all['Algorithm'] == 'Dynamic_Programming']
 #df_bf_dp = df_all.loc[df_all['Algorithm'] != 'Backtracking']
 
 #print(df_bt.head)
@@ -56,12 +64,12 @@ print(end_conditions)
 #df_bf_dp = pd.concat([bf_df, dp_df], ignore_index=True)
 
 
-'''
-# looks like backtracking time grows exponentially
+
+# looks like runtimes time grows exponentially
 # set up exponential curve fit
-x = df_dp['Puzzle_size']
+x = df_bt['Puzzle size']
 x = x ** 2                  # regress on number of spots
-y = df_dp['Runtime']
+y = df_bt['Runtime']
 y = y[y > 0]                # Avoid log(0)
 x = x.loc[y.index]
 
@@ -72,8 +80,8 @@ coeffs = np.polyfit(x, log_y, deg = 1)
 
 log_a, log_b = coeffs[1], coeffs[0]
 
-print(coeffs)
-print(log_a, log_b)
+#print(coeffs)
+#print(log_a, log_b)
 
 a = np.exp(log_a)
 b = np.exp(log_b)
@@ -85,6 +93,7 @@ y_fit = a * (b ** x)
 plt.scatter(x, y, label = 'Runtime')
 plt.plot(x, y_fit, color = 'green', label = 'Exponential Fit')
 plt.legend()
+plt.suptitle('Backtracking: Runtime vs. Puzzle Size')
 plt.title('Exponential Fit: y = a * b^x')
 plt.show()
 
@@ -95,7 +104,7 @@ r2 = r2_score(y, y_fit)
 mse = mean_squared_error(y, y_fit)
 
 print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
-'''
+
 '''
 # OLS regression on BF and DP  runtime vs puzzle size
 bf_result = sm.OLS.from_formula(formula = 'Runtime ~ Puzzle_size', data = df_bf).fit()
@@ -108,8 +117,8 @@ print(bf_result.summary())
 # initial description and summary stats
 summary1 = df_all.groupby(['Puzzle size', 'Algorithm'])[['Runtime']].describe()
 print(summary1)
-#summary2 = df_all.groupby('Puzzle_size', 'Algorithm')[['Iterations']].describe()
-#print(summary2)
+summary2 = df_all.groupby(['Puzzle size', 'Algorithm'])[['Iterations']].describe()
+print(summary2)
 
 print()
 df_median = df_all.groupby(['Puzzle size', 'Algorithm'])[['Runtime']].median() 
@@ -141,13 +150,14 @@ plt.suptitle('Runtime Distribution by Puzzle Size')
 plt.title('Brute Force and Dynamic Programming', fontsize = 10)
 plt.show()
 
-sns.histplot(data = df_bt, x = 'Runtime', hue = 'Puzzle size', bins = 60, kde = False, element = 'step')
-plt.title('Runtime Distribution for Backtracking')
-
+sns.histplot(data = df_bt, x = 'Iterations', bins = 60, kde = False, element = 'step')
+plt.title('Pre-filtered Grid Distribution for Backtracking, n=100')
+plt.xlabel('Number Pre-filtered out of 64 possible')
 plt.show()
-'''
+
 
 # Save the combined file 
-output_fname = 'All_12.2_combined.pkl'
-combined_name = os.path.join(cur_dir, work_dir, output_fname)
+output_fname = 'All_8.2_combined.pkl'
+combined_name = os.path.join(cur_dir, output_fname)
 df_all.to_pickle(combined_name)
+'''

@@ -184,3 +184,20 @@ Algorithm
 Backtracking         0.587125
 Brute_Force          3.081374
 Dynamic_Programming  9.689138
+
+==== special case: 15x15 unfiltered puzzles
+
+Note: no puzzles solved by BF or DP algorithm, stalled after 4 iterations
+
+                                Runtime
+                                  count      mean       std      min       25%       50%       75%      max
+Puzzle size Algorithm
+15          Backtracking          100.0  1.182925  0.260560  0.59027  1.014560  1.176470  1.326043  2.00285
+            Brute_Force           100.0  0.123297  0.094207  0.01932  0.056002  0.096945  0.159075  0.47723
+            Dynamic_Programming   100.0  0.017073  0.008122  0.00670  0.011880  0.014210  0.019818  0.04407
+                                Iterations
+                                     count   mean        std   min   25%   50%    75%    max
+Puzzle size Algorithm
+15          Backtracking             100.0  72.01  22.446567  20.0  58.0  71.5  85.25  124.0
+            Brute_Force              100.0   4.00   0.000000   4.0   4.0   4.0   4.00    4.0
+            Dynamic_Programming      100.0   4.00   0.000000   4.0   4.0   4.0   4.00    4.0

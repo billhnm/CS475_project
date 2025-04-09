@@ -45,7 +45,7 @@ output_list = []
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
 data_dir = 'data'
-file_stub = '12x12_2_'
+file_stub = '8x8_2_'
 file_type = '.csv'
 
 #npz_name = '10x10_0.2.npz'
@@ -66,7 +66,7 @@ file_type = '.csv'
 for i in range(100):
     file_num = str(i)
     file_name = file_stub + file_num + file_type
-    csv_input_name = os.path.join(cur_dir, work_dir, data_dir, file_name)
+    csv_input_name = os.path.join(cur_dir, data_dir, file_name)
     # reset variables
     puzzle_array = []
     puzzle_mask = []
@@ -176,12 +176,12 @@ for i in range(100):
                 final_string = 'Solved'
                 # print(f'Solved in {iter} iterations')
             iter += 1
-            if iter > 10 and np.array_equal(old_puzzle_mask, puzzle_mask):
+            if iter > 3 and np.array_equal(old_puzzle_mask, puzzle_mask):
                 done = True
                 final_string = 'Stalled after ' + str(iter) + ' iterations'
-            if iter > 250:
+            if iter > 100:
                 done = True
-                final_string = 'Found no solution after 250 iterations'
+                final_string = 'Found no solution after 100 iterations'
 
         # change puzzle mask so invalid nums = 0
         puzzle_mask[puzzle_mask == -1] = 0
@@ -192,6 +192,7 @@ for i in range(100):
     if algo_to_run == 3:
         # Main BT solver
         bt_puzzle_array = create_bt_array(puzzle_size, puzzle_array, puzzle_mask, row_tgt, col_tgt)
+        inter_count = np.count_nonzero(puzzle_mask == -1)
         
         # main BT solver using solve_grid
         solution = solve_grid(bt_puzzle_array, row_tgt, col_tgt, puzzle_size) 
@@ -208,7 +209,7 @@ for i in range(100):
             # print('\nSolution Array')
             solution_array = solution_mask * puzzle_array
             final_string = 'Solved'
-            iter = 1
+            iter = inter_count
             #print(solution_array)
 
         else:
@@ -232,7 +233,7 @@ time_stamp = time_now.strftime('%y_%m_%d_%H%M')
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
 output_name = algo_string + '_' + time_stamp + '.pkl'
-output_path = os.path.join(cur_dir, work_dir, output_name)
+output_path = os.path.join(cur_dir, output_name)
 output_df.to_pickle(output_path)
 
 
