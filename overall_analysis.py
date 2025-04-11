@@ -37,7 +37,7 @@ df_all = pd.concat([df_bf, df_dp, df_bt], ignore_index=True)
 '''
 # read into df_all
 df_fname = 'All_runs_combined.pkl'
-df_input_name = os.path.join(cur_dir, df_fname)
+df_input_name = os.path.join(cur_dir, work_dir, df_fname)
 df_all = pd.read_pickle(df_input_name)
 
 '''
@@ -64,8 +64,8 @@ df_dp = df_all.loc[df_all['Algorithm'] == 'Dynamic_Programming']
 #df_bf_dp = pd.concat([bf_df, dp_df], ignore_index=True)
 
 
-
-# looks like runtimes time grows exponentially
+'''
+# looks like backtracking runtimes grows exponentially
 # set up exponential curve fit
 x = df_bt['Puzzle size']
 x = x ** 2                  # regress on number of spots
@@ -104,6 +104,44 @@ r2 = r2_score(y, y_fit)
 mse = mean_squared_error(y, y_fit)
 
 print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
+
+'''
+# looks like dp or bf runtimes grows non-linearly
+# set up polynomical curve fit
+x = df_bf['Puzzle size']
+x = x                   # regress on number of spots
+y = df_bf['Runtime']
+# y = y[y > 0]                # only needed for log(0)
+x = x.loc[y.index]
+
+
+# perform linear regression on log(y)
+coeffs = np.polyfit(x, y, deg = 2)
+#print(coeffs)
+poly_eqn = np.poly1d(coeffs)
+print(poly_eqn)
+
+a, b, c = coeffs[2], coeffs[1], coeffs[0]
+
+# predictions
+y_fit = a + b*x + c*(x**2)
+
+# plot the results
+plt.scatter(x, y, label = 'Runtime')
+plt.plot(x, y_fit, color = 'green', label = 'Polynomial Fit')
+plt.legend()
+plt.suptitle('Brute Force: Runtime vs. Puzzle Size')
+plt.title('Polynomial Fit: y = a + b*x + c*(x**2)')
+plt.show()
+
+print(f'Fitted model: y = {a:.3e} + {b:.3e}*x + {c:.3e}*x^2')
+
+# look at fit quality via r2 and MSE
+r2 = r2_score(y, y_fit)
+mse = mean_squared_error(y, y_fit)
+
+print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
+
 
 '''
 # OLS regression on BF and DP  runtime vs puzzle size

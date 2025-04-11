@@ -1,0 +1,20 @@
+# spots
+BF poly fit 
+
+Fitted model: y = 2.411e-03 + -7.716e-06*x + 1.101e-07*x^2
+R²: 0.9558, MSE: 0.0000
+
+DP poly fit
+
+Fitted model: y = 1.580e-03 + 3.171e-06*x + 5.708e-08*x^2
+R²: 0.9483, MSE: 0.0000
+
+# puzzle size
+BF Poly fit
+Fitted model: y = 1.222e-02 + -2.170e-03*x + 1.200e-04*x^2
+R²: 0.9484, MSE: 0.0000
+
+
+DP Poly fit
+Fitted model: y = 6.685e-03 + -1.128e-03*x + 6.946e-05*x^2
+R²: 0.9439, MSE: 0.0000
