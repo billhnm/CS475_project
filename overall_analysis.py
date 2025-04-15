@@ -105,7 +105,7 @@ mse = mean_squared_error(y, y_fit)
 
 print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
 
-'''
+
 # looks like dp or bf runtimes grows non-linearly
 # set up polynomical curve fit
 x = df_bf['Puzzle size']
@@ -141,7 +141,7 @@ r2 = r2_score(y, y_fit)
 mse = mean_squared_error(y, y_fit)
 
 print(f'R²: {r2:.4f}, MSE: {mse:.4f}')
-
+'''
 
 '''
 # OLS regression on BF and DP  runtime vs puzzle size
@@ -174,13 +174,13 @@ sns.lineplot(data = df_bf_dp, x = 'Puzzle size', y = 'Runtime',  hue = 'Algorith
 plt.suptitle("Runtime by Puzzle Size and Algorithm")
 plt.title('Brute Force vs Dynamic Programming', fontsize = 10)
 plt.show()
-
-
-sns.boxplot(x = 'Puzzle size', y = 'Runtime', hue = 'Algorithm', data = df_bf_dp)
-plt.title("Runtime Distribution by Puzzle Size and Algorithm")
-plt.title('Brute Force vs Dynamic Programming', fontsize = 10)
-plt.show()
 '''
+
+sns.boxplot(x = 'Puzzle size', y = 'Runtime', hue = 'Algorithm', data = df_bt)
+plt.suptitle("Runtime Distribution by Puzzle Size")
+plt.title('Backtracking', fontsize = 10)
+plt.show()
+
 '''
 # histogram
 sns.histplot(data = df_bf_dp, x = 'Runtime', hue = 'Puzzle size', bins = 45, kde = False, element = 'step')
