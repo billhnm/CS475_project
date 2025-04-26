@@ -45,7 +45,7 @@ output_list = []
 cur_dir = os.getcwd()
 work_dir = 'CS475_project'
 data_dir = 'data'
-file_stub = '8x8_2_'
+file_stub = 's15x15_1_conv'
 file_type = '.csv'
 
 #npz_name = '10x10_0.2.npz'
@@ -63,7 +63,7 @@ file_type = '.csv'
 
 # set up loop to step through files in batch
 
-for i in range(100):
+for i in range(1):
     file_num = str(i)
     file_name = file_stub + file_num + file_type
     csv_input_name = os.path.join(cur_dir, data_dir, file_name)
@@ -82,6 +82,7 @@ for i in range(100):
     next_col_mask = []
     new_row_mask = []
     solution_array = []
+    puzzle_steps = []
     solution_found = False
     done = False
     output_list = []
@@ -94,11 +95,12 @@ for i in range(100):
     puzzle_size = puzzle_array.shape[0]
 
     main_col_mask, main_row_mask, puzzle_mask = create_masks(puzzle_size)
-
+    puzzle_steps.append(puzzle_array.copy())
+    puzzle_steps.append(puzzle_mask.copy())
     # Make the first cut 
     puzzle_mask = initial_cut(puzzle_size, puzzle_array, row_tgt, col_tgt, puzzle_mask)
     #print(puzzle_mask)
-
+    puzzle_steps.append(puzzle_mask.copy())
     if algo_to_run == 1 or algo_to_run == 2:
     # Main Row-wise solver -- calls either BF or DP functions
         iter = 0
@@ -135,6 +137,7 @@ for i in range(100):
                         main_row_mask[i] = 0
                     # Update puzzle mask
                     puzzle_mask[i,:] = new_row_mask
+                    puzzle_steps.append(puzzle_mask.copy())
             # End row loop
 
             for i in range(puzzle_size):                    # step through the columns
@@ -150,7 +153,7 @@ for i in range(100):
                     else: 
                         main_col_mask[i] = 0
                     # Update puzzle mask
-                    puzzle_mask[:,i] = upd_col_mask      
+                    puzzle_mask[:,i] = upd_col_mask 
 
                     next_col_mask = find_invalid_nums(valid_combos, cur_col, upd_col_mask)
                     if 0 not in upd_col_mask:    
@@ -167,6 +170,7 @@ for i in range(100):
                         main_col_mask[i] = 0
                     # update puzzle mask
                     puzzle_mask[:,i] = new_col_mask
+                    puzzle_steps.append(puzzle_mask.copy())
             # End column loop
 
             # check for done, stalled, or unsolvable condition
@@ -174,6 +178,7 @@ for i in range(100):
                 done = True
                 solution_found = True
                 final_string = 'Solved'
+                puzzle_steps.append(puzzle_mask.copy())
                 # print(f'Solved in {iter} iterations')
             iter += 1
             if iter > 3 and np.array_equal(old_puzzle_mask, puzzle_mask):
@@ -227,14 +232,16 @@ for i in range(100):
 
 # write output record to dataframe, then write it to pickle as timestamped file
 
-output_df = pd.DataFrame(output_record, columns = ['Algorithm', 'Puzzle size', 'Runtime', 'Iterations', 'Output string'])
+#output_df = pd.DataFrame(output_record, columns = ['Algorithm', 'Puzzle size', 'Runtime', 'Iterations', 'Output string'])
 time_now = datetime.datetime.now()
 time_stamp = time_now.strftime('%y_%m_%d_%H%M')
 cur_dir = os.getcwd()
-work_dir = 'CS475_project'
-output_name = algo_string + '_' + time_stamp + '.pkl'
-output_path = os.path.join(cur_dir, output_name)
-output_df.to_pickle(output_path)
+#work_dir = 'CS475_project'
+#output_name = algo_string + '_' + time_stamp + '.pkl'
+#output_path = os.path.join(cur_dir, output_name)
+#output_df.to_pickle(output_path)
+output_name = 'steps_' + algo_string + time_stamp + '.npz'
+np.savez(output_name, *puzzle_steps)
 
 
 
