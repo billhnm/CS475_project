@@ -13,9 +13,14 @@
 - Locates integers that cannot be present to satisfy the target constraint and deletes them from the grid
 - Continues until a unique solution is found, or the maximum number of iterations is reached.
 
-**Programs**
-`main_solver.py` Main Solver logic, steps through rows and columns, calling other modules. Loads puzzle data files and calls appropriate modules to solve them
-`build_puzzle.py` Given a size N, builds a puzzle with a unique solution, up to N=20
+**Program Flowchart**
+
+![Flowchart](Puzzle_solver_flowchart.png)
+
+**Other Programs**
+`build_puzzle.py` Given a size N, builds a valid puzzle up to N=20
 `stat_analysis.py` Performs statistical analysis of results, including plots, descriptive statistics, paired t-tests, and ANOVA
 
-
+**Project Report and Presentation**
+- [Project Report](Project Report_BillHanson.pdf)
+- [Video Presentation](ProjectPresentationV2.mp4)
