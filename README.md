@@ -22,5 +22,5 @@
 `stat_analysis.py` Performs statistical analysis of results, including plots, descriptive statistics, paired t-tests, and ANOVA
 
 **Project Report and Presentation**
-- [Project Report](Project Report_BillHanson.pdf)
+- [Project Report](Project_Report_BillHanson.pdf)
 - [Video Presentation](ProjectPresentationV2.mp4)
