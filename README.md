@@ -17,6 +17,9 @@
 
 ![Flowchart](Puzzle_solver_flowchart.png)
 
+**Usage**
+`python main_solver.py` and follow input prompts
+
 **Other Programs**
 `build_puzzle.py` Given a size N, builds a valid puzzle up to N=20
 `stat_analysis.py` Performs statistical analysis of results, including plots, descriptive statistics, paired t-tests, and ANOVA
