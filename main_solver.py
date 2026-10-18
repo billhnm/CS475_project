@@ -43,30 +43,30 @@ output_list = []
 
 # create the input names
 cur_dir = os.getcwd()
-work_dir = 'CS475_project'
 data_dir = 'data'
-file_stub = 's15x15_1_conv'
-file_type = '.csv'
 
-#npz_name = '10x10_0.2.npz'
-#npz_input_name = os.path.join(cur_dir, work_dir, npz_name)
-# load the puzzle
+# ask for the puzzle file; files are read from the data directory
+print('Puzzle files available in ' + data_dir + ':')
+for f in sorted(os.listdir(os.path.join(cur_dir, data_dir))):
+    if f.endswith(('.csv', '.npz')):
+        print('  ' + f)
+file_name = input('Enter puzzle file name (.csv or .npz): ').strip()
+input_name = os.path.join(cur_dir, data_dir, file_name)
 
-# type_input = int(input('What type of file? 1 for csv, 2 for npz: '))
+# determine the file type from the extension
+if file_name.lower().endswith('.csv'):
+    type_input = 1
+elif file_name.lower().endswith('.npz'):
+    type_input = 2
+else:
+    raise SystemExit('Unrecognized file type: use a .csv or .npz file')
 
-#if type_input == 1: 
-#    puzzle_array, puzzle_size, col_tgt, row_tgt = load_puzzle_csv(csv_input_name)
-#elif type_input == 2:
-#    puzzle_array, puzzle_size, col_tgt, row_tgt = load_puzzle_npz(npz_input_name)
-#else:
-#    print('Unrecognized file type')
+if not os.path.isfile(input_name):
+    raise SystemExit('File not found: ' + input_name)
 
 # set up loop to step through files in batch
 
 for i in range(1):
-    file_num = str(i)
-    file_name = file_stub + file_num + file_type
-    csv_input_name = os.path.join(cur_dir, data_dir, file_name)
     # reset variables
     puzzle_array = []
     puzzle_mask = []
@@ -87,7 +87,11 @@ for i in range(1):
     done = False
     output_list = []
      
-    puzzle_array, puzzle_size, col_tgt, row_tgt = load_puzzle_csv(csv_input_name)
+    # load the puzzle
+    if type_input == 1:
+        puzzle_array, puzzle_size, col_tgt, row_tgt = load_puzzle_csv(input_name)
+    else:
+        puzzle_array, puzzle_size, col_tgt, row_tgt = load_puzzle_npz(input_name)
 
     # start timer
     start_time = time.perf_counter()
@@ -227,6 +231,7 @@ for i in range(1):
 
     output_list = [algo_string, puzzle_size, run_time, iter, final_string]
     output_record.append(output_list)
+    print(f'\n{algo_string} on {file_name} ({puzzle_size}x{puzzle_size}): {final_string} in {run_time} seconds')
 # 
 # End main loop -- files all done
 
@@ -242,6 +247,7 @@ cur_dir = os.getcwd()
 #output_df.to_pickle(output_path)
 output_name = 'steps_' + algo_string + time_stamp + '.npz'
 np.savez(output_name, *puzzle_steps)
+print('Solution steps saved to ' + output_name)
 
 
 
