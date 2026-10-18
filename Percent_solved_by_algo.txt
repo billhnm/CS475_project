@@ -1,0 +1,26 @@
+8x8_0.2 puzzles
+
+100% of puzzles solved by Backtracking
+83% of puzzles solved by Brute Force
+83% of puzzles solved by Dynamic Programming
+
+
+10x10_0.2 puzzles
+
+100% of puzzles solved by Backtracking
+73% of puzzles solved by Brute Force
+73% of puzzles solved by Dynamic Programming
+
+
+12x12_0.2 puzzles
+
+100% of puzzles solved by Backtracking
+23% of puzzles solved by Brute Force
+23% of puzzles solved by Dynamic Programming
+
+
+15x15_0.2 puzzles
+
+100% of puzzles solved by Backtracking
+0% of puzzles solved by Brute Force
+0% of puzzles solved by Dynamic Programming
