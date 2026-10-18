@@ -64,4 +64,4 @@ python main_solver.py       # choose 1 = Brute Force, 2 = Dynamic Programming, 3
 ## Report and Presentation
 
 - [Project Report (PDF)](Project_Report_BillHanson.pdf)
-- [Video Presentation](YOUTUBE_LINK_HERE)
+- [Video Presentation](https://youtu.be/ih_-wniEFok)
